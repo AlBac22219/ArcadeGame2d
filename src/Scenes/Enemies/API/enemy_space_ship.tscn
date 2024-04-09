@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dmpbuxf4kqwr3"]
+
+[node name="EnemySpaceShip" type="Area2D"]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="death" type="AudioStreamPlayer" parent="."]
+bus = &"Shoots"
+
+[node name="EnginePlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Engine")
+
+[node name="Engine" type="Sprite2D" parent="."]

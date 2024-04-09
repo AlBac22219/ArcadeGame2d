@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=3 uid="uid://bx7aotlsx1wrg"]
+
+[ext_resource type="PackedScene" uid="uid://v0ge6fi1ev5l" path="res://src/Scenes/Ammo/API/ammo.tscn" id="1_ke7om"]
+[ext_resource type="Script" path="res://src/Scripts/Ammo/Types/rocket.gd" id="2_81g8y"]
+[ext_resource type="Texture2D" uid="uid://cvimrdyiy5is7" path="res://Assets/Textures/Ammo/Nairan - Rocket.png" id="2_sdrh3"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p0mkq"]
+radius = 3.0
+height = 10.0
+
+[sub_resource type="Animation" id="Animation_y2sca"]
+resource_name = "Idle"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_kvqwq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2b6f7"]
+_data = {
+"Idle": SubResource("Animation_y2sca"),
+"RESET": SubResource("Animation_kvqwq")
+}
+
+[node name="Rocket" groups=["player"] instance=ExtResource("1_ke7om")]
+script = ExtResource("2_81g8y")
+
+[node name="CollisionShape2D" parent="." index="0"]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_p0mkq")
+
+[node name="Sprite2D" parent="." index="1"]
+texture = ExtResource("2_sdrh3")
+hframes = 4
+frame = 1
+
+[node name="AnimationPlayer" parent="." index="2"]
+autoplay = "Idle"
+libraries = {
+"": SubResource("AnimationLibrary_2b6f7")
+}
+
+[node name="VisibleOnScreenEnabler2D" parent="." index="3"]
+position = Vector2(-2.38419e-07, 1)
+scale = Vector2(0.4, 0.5)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

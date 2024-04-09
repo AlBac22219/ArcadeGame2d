@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=3 uid="uid://cxcdvxmo7nlpk"]
+
+[ext_resource type="PackedScene" uid="uid://v0ge6fi1ev5l" path="res://src/Scenes/Ammo/API/ammo.tscn" id="1_ybwi4"]
+[ext_resource type="Script" path="res://src/Scripts/Ammo/Types/torpedo.gd" id="2_2h3dn"]
+[ext_resource type="Texture2D" uid="uid://cl61ttsw4veqb" path="res://Assets/Textures/Ammo/Nairan - Torpedo.png" id="3_clfq8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xryek"]
+radius = 3.0
+height = 18.0
+
+[sub_resource type="Animation" id="Animation_6u01o"]
+resource_name = "Idle"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_mhgl7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_chnfd"]
+_data = {
+"Idle": SubResource("Animation_6u01o"),
+"RESET": SubResource("Animation_mhgl7")
+}
+
+[node name="Torpedo" groups=["player"] instance=ExtResource("1_ybwi4")]
+script = ExtResource("2_2h3dn")
+
+[node name="CollisionShape2D" parent="." index="0"]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_xryek")
+
+[node name="Sprite2D" parent="." index="1"]
+texture = ExtResource("3_clfq8")
+hframes = 3
+frame = 1
+
+[node name="AnimationPlayer" parent="." index="2"]
+autoplay = "Idle"
+libraries = {
+"": SubResource("AnimationLibrary_chnfd")
+}
+
+[node name="VisibleOnScreenEnabler2D" parent="." index="3"]
+position = Vector2(-2.38419e-07, 1.5)
+scale = Vector2(0.4, 0.85)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

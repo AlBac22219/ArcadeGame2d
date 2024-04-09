@@ -1,0 +1,72 @@
+[gd_scene load_steps=11 format=3 uid="uid://dern4k7s6de6f"]
+
+[ext_resource type="Script" path="res://src/Scripts/game.gd" id="1_ohxbv"]
+[ext_resource type="PackedScene" uid="uid://dtxc686ce8ptc" path="res://src/Scenes/Enemies/Types/asteroid.tscn" id="2_7ggtb"]
+[ext_resource type="Texture2D" uid="uid://c3r1632bru64l" path="res://Assets/Textures/MainGame/Space.png" id="2_nysyo"]
+[ext_resource type="PackedScene" uid="uid://4phmm8c4qnhk" path="res://src/Scenes/player.tscn" id="3_crjgf"]
+[ext_resource type="PackedScene" uid="uid://g3r70yjm0tdh" path="res://src/Scenes/hud.tscn" id="3_pghlt"]
+[ext_resource type="PackedScene" uid="uid://bmqsxyce6kbwa" path="res://src/Scenes/Enemies/Types/fighter.tscn" id="3_po6lt"]
+[ext_resource type="PackedScene" uid="uid://dp3yqnfcjai4l" path="res://src/Scenes/Enemies/Types/frigate.tscn" id="4_hew38"]
+[ext_resource type="PackedScene" uid="uid://7sirtx1f0xkc" path="res://src/Scenes/Enemies/Types/scout.tscn" id="5_u7d28"]
+[ext_resource type="PackedScene" uid="uid://d30syc0nllndo" path="res://src/Scenes/Buff/buff.tscn" id="6_xiyns"]
+
+[sub_resource type="Curve2D" id="Curve2D_1uykp"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 477, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 478, -1, 0, 0, 0, 0, 477, 1)
+}
+point_count = 4
+
+[node name="Game" type="Node"]
+script = ExtResource("1_ohxbv")
+asteroid = ExtResource("2_7ggtb")
+fighter = ExtResource("3_po6lt")
+frigate = ExtResource("4_hew38")
+scout = ExtResource("5_u7d28")
+buff = ExtResource("6_xiyns")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(240, 1420)
+texture = ExtResource("2_nysyo")
+
+[node name="HUD" parent="." instance=ExtResource("3_pghlt")]
+
+[node name="PlayerPosition" type="Marker2D" parent="."]
+position = Vector2(240, 617)
+
+[node name="Player" parent="." instance=ExtResource("3_crjgf")]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+autoplay = true
+
+[node name="MobSpawn" type="Path2D" parent="."]
+curve = SubResource("Curve2D_1uykp")
+
+[node name="MobSpawnPoint" type="PathFollow2D" parent="MobSpawn"]
+position = Vector2(477, 1)
+rotation = -3.1395
+
+[node name="EventTimer" type="Timer" parent="."]
+wait_time = 60.0
+
+[node name="ScoreTimer" type="Timer" parent="."]
+wait_time = 4.0
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="MobTimer" type="Timer" parent="."]
+
+[node name="BuffTimer" type="Timer" parent="."]
+wait_time = 15.0
+
+[connection signal="start_game" from="HUD" to="." method="_on_hud_start_game"]
+[connection signal="die" from="Player" to="." method="_on_player_die"]
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="takeBonus" from="Player" to="." method="_on_player_take_bonus"]
+[connection signal="finished" from="AudioStreamPlayer" to="." method="_on_audio_stream_player_finished"]
+[connection signal="timeout" from="EventTimer" to="." method="_on_event_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="HUD" method="_on_score_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="BuffTimer" to="." method="_on_buff_timer_timeout"]

@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=3 uid="uid://g3r70yjm0tdh"]
+
+[ext_resource type="Script" path="res://src/Scripts/hud.gd" id="1_pgrrl"]
+[ext_resource type="Texture2D" uid="uid://bgf62ex2ijbkq" path="res://Assets/Textures/MainGame/Space_Battle.png" id="1_qugbv"]
+[ext_resource type="Texture2D" uid="uid://cvhs78jtwpjjt" path="res://Assets/Textures/Player/Player.png" id="3_ktspr"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_l8avp"]
+action = &"start_game"
+
+[sub_resource type="Shortcut" id="Shortcut_kh2yt"]
+events = [SubResource("InputEventAction_l8avp")]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_pgrrl")
+
+[node name="Title" type="Sprite2D" parent="."]
+position = Vector2(246, 130)
+scale = Vector2(0.454317, 1.07955)
+texture = ExtResource("1_qugbv")
+
+[node name="Button" type="Button" parent="."]
+offset_left = 133.0
+offset_top = 473.0
+offset_right = 366.0
+offset_bottom = 523.0
+theme_override_font_sizes/font_size = 32
+shortcut = SubResource("Shortcut_kh2yt")
+text = "Start"
+metadata/_edit_use_anchors_ = true
+
+[node name="Score" type="Label" parent="."]
+anchors_preset = -1
+anchor_top = -0.0236111
+anchor_bottom = -0.0236111
+offset_left = 294.0
+offset_top = 1.0
+offset_right = 481.0
+offset_bottom = 84.0
+theme_override_font_sizes/font_size = 20
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="GameOverTimer" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="HP" type="Sprite2D" parent="."]
+position = Vector2(36, 42)
+texture = ExtResource("3_ktspr")
+
+[node name="HPCount" type="Label" parent="HP"]
+offset_left = 13.0
+offset_top = -46.0
+offset_right = 107.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 60
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

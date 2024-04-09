@@ -1,0 +1,127 @@
+[gd_scene load_steps=12 format=3 uid="uid://7sirtx1f0xkc"]
+
+[ext_resource type="Script" path="res://src/Scripts/Entity/Enemies/Scout/scout.gd" id="2_e4oum"]
+[ext_resource type="AudioStream" uid="uid://nscn40kuy7dd" path="res://Assets/Sounds/Enemies/Death.wav" id="3_7vnro"]
+[ext_resource type="Texture2D" uid="uid://dditjapqrpo22" path="res://Assets/Textures/Enemies/Scout/Kla'ed - Scout - Destruction.png" id="3_twpvm"]
+[ext_resource type="Texture2D" uid="uid://cjrt22e626cvd" path="res://Assets/Textures/Enemies/Scout/Kla'ed - Scout - Engine.png" id="4_bb8la"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a1s8w"]
+radius = 11.0
+height = 24.0
+
+[sub_resource type="Animation" id="Animation_rtag7"]
+resource_name = "Death"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 4, 5, 6, 7, 8, 9]
+}
+
+[sub_resource type="Animation" id="Animation_whakk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q1jo7"]
+_data = {
+"Death": SubResource("Animation_rtag7"),
+"RESET": SubResource("Animation_whakk")
+}
+
+[sub_resource type="Animation" id="Animation_yxp2k"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_vntla"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pe5pb"]
+_data = {
+"RESET": SubResource("Animation_yxp2k"),
+"idle": SubResource("Animation_vntla")
+}
+
+[node name="Scout" type="Area2D" groups=["enemies"]]
+script = ExtResource("2_e4oum")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("CapsuleShape2D_a1s8w")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, -1)
+scale = Vector2(1.1, 1.2)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_twpvm")
+flip_v = true
+hframes = 10
+frame = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_q1jo7")
+}
+
+[node name="death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_7vnro")
+bus = &"Shoots"
+
+[node name="EnginePlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Engine")
+autoplay = "idle"
+libraries = {
+"": SubResource("AnimationLibrary_pe5pb")
+}
+
+[node name="Engine" type="Sprite2D" parent="."]
+texture = ExtResource("4_bb8la")
+flip_v = true
+hframes = 10
+frame = 1
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

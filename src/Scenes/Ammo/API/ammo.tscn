@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://v0ge6fi1ev5l"]
+
+[ext_resource type="Script" path="res://src/Scripts/Ammo/API/ammo.gd" id="1_3m0ev"]
+
+[node name="Ammo" type="Area2D"]
+script = ExtResource("1_3m0ev")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]
